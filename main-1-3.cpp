@@ -3,7 +3,7 @@
 
 int main() {
     int n = 5;
-    PersonList pl = createPersonList(n);
+    PersonList pl = createPersonList(n); 
     PersonList plCopy = deepCopyPersonList(pl);
 
     std::cout << "Original List:" << std::endl;
@@ -16,7 +16,8 @@ int main() {
         std::cout << "Name: " << plCopy.people[i].name << ", Age: " << plCopy.people[i].age << std::endl;
     }
 
-    delete[] pl.people;
-    delete[] plCopy.people;
+    delete[] pl.people;     
+    delete[] plCopy.people;   
     return 0;
 }
+
