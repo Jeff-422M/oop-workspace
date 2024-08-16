@@ -8,4 +8,10 @@ struct Person {
     int age;
 };
 
-#endif // PERSON_H
+struct PersonList {
+    Person* people;
+    int numPeople;
+};
+
+#endif
+
