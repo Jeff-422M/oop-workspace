@@ -1,7 +1,5 @@
 #include "Person.h"
 #include <iostream>
-#include "function-1-2.cpp"
-#include "function-1-4.cpp"
 
 int main() {
     int n = 5;
