@@ -17,6 +17,6 @@ int main() {
     }
 
     delete[] pl.people;
-    delete[] plCopy.people; 
+    delete[] plCopy.people;
     return 0;
 }
