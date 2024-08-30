@@ -6,30 +6,16 @@
 
 int main() {
     ParkingLot lot(10);
-    Vehicle *v;
-    int type, id;
-    std::time_t entryTime;
+    std::time_t currentTime = std::time(nullptr);
 
-    while (lot.getCount() < 10) {
-        std::cout << "Enter vehicle type (1=Car, 2=Bus, 3=Motorbike): ";
-        std::cin >> type;
-        std::cout << "Enter ID: ";
-        std::cin >> id;
-        entryTime = std::time(nullptr);
-
-        switch (type) {
-            case 1: v = new Car(id, entryTime); break;
-            case 2: v = new Bus(id, entryTime); break;
-            case 3: v = new Motorbike(id, entryTime); break;
-            default: std::cout << "Invalid type" << std::endl; continue;
-        }
-
-        if (!lot.parkVehicle(v)) {
-            delete v;
-            break;
-        }
+    // Example of creating and parking a car
+    Vehicle* car = new Car(1, currentTime);
+    if (!lot.parkVehicle(car)) {
+        delete car; // Ensure to clean up if not parked
     }
 
-    std::cout << "Finished parking vehicles." << std::endl;
+    // Further interactions can be added as per requirements
+
+    std::cout << "Number of vehicles in lot: " << lot.getCount() << std::endl;
     return 0;
 }
