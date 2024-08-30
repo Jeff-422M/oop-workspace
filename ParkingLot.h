@@ -13,6 +13,8 @@ public:
     void parkVehicle(Vehicle* v);
     void unparkVehicle(int id);
     int getCount();
+    int countOverstayingVehicles(int maxDuration);
 };
 
 #endif
+

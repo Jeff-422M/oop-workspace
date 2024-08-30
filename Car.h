@@ -6,7 +6,7 @@
 
 class Car : public Vehicle {
 public:
-    using Vehicle::Vehicle;
+    Car(int id, std::time_t entryTime) : Vehicle(id, entryTime) {}
     int getParkingDuration() override;
 };
 

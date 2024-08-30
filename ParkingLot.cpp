@@ -25,3 +25,13 @@ void ParkingLot::unparkVehicle(int id) {
 int ParkingLot::getCount() {
     return vehicles.size();
 }
+
+int ParkingLot::countOverstayingVehicles(int maxDuration) {
+    int count = 0;
+    for (auto v : vehicles) {
+        if (difftime(time(nullptr), v->timeOfEntry) > maxDuration) {
+            count++;
+        }
+    }
+    return count;
+}
