@@ -1,40 +1,26 @@
 #include <iostream>
-#include "ParkingLot.h"
 #include "Car.h"
 #include "Bus.h"
 #include "Motorbike.h"
+#include "ParkingLot.h"
 
 int main() {
-    ParkingLot lot(10);  // Create a parking lot with a capacity of 10 vehicles
+    ParkingLot lot(10);
 
-    // Initially fill the parking lot as described
-    for (int i = 0; i < 5; i++) {  // Park 5 Cars
-        lot.parkVehicle(new Car(i));
+    // Simulate parking 5 Cars, 3 Buses, and 2 Motorbikes
+    for (int i = 0; i < 5; i++) {
+        lot.parkVehicle(new Car(i, std::time(nullptr) - (i + 1) * 10)); // Simulated staggered entry times
     }
-    for (int i = 0; i < 3; i++) {  // Park 3 Buses
-        lot.parkVehicle(new Bus(5 + i));
+    for (int i = 5; i < 8; i++) {
+        lot.parkVehicle(new Bus(i, std::time(nullptr) - (i + 1) * 15));
     }
-    for (int i = 0; i < 2; i++) {  // Park 2 Motorbikes
-        lot.parkVehicle(new Motorbike(8 + i));
-    }
-
-    int maxParkingDuration;
-    std::cout << "Enter maximum parking duration (in seconds): ";
-    std::cin >> maxParkingDuration;
-
-    // Function to count the number of vehicles that have overstayed in the parking lot
-    int countOverstayingVehicles(const ParkingLot& lot, int maxDuration) {
-        int count = 0;
-        for (int i = 0; i < lot.getCount(); i++) {
-            if (lot.vehicles[i]->getParkingDuration() > maxDuration) {
-                count++;
-            }
-        }
-        return count;
+    for (int i = 8; i < 10; i++) {
+        lot.parkVehicle(new Motorbike(i, std::time(nullptr) - (i + 1) * 20));
     }
 
-    int overstayCount = countOverstayingVehicles(lot, maxParkingDuration);
-    std::cout << "Number of overstaying vehicles: " << overstayCount << std::endl;
+    // Count and print overstaying vehicles
+    int count = lot.countOverstayingVehicles(15);
+    std::cout << "Number of overstaying vehicles: " << count << std::endl;
 
     return 0;
 }

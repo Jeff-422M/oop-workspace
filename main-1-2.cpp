@@ -1,50 +1,42 @@
 #include <iostream>
-#include "ParkingLot.h"
 #include "Car.h"
 #include "Bus.h"
 #include "Motorbike.h"
+#include "ParkingLot.h"
 
 int main() {
     ParkingLot lot(10);
-    int choice, vehicleID;
-    Vehicle* vehicle = nullptr;
+    Vehicle *v;
+    int type, id;
+    std::time_t entryTime;
 
-    while (lot.getCount() < lot.capacity) {
-        std::cout << "Choose a vehicle type to park:\n";
-        std::cout << "1. Car\n";
-        std::cout << "2. Bus\n";
-        std::cout << "3. Motorbike\n";
-        std::cout << "4. Stop parking\n";
-        std::cin >> choice;
+    // Parking vehicles
+    while (lot.getCount() < 10) {
+        std::cout << "Enter vehicle type (1=Car, 2=Bus, 3=Motorbike): ";
+        std::cin >> type;
+        std::cout << "Enter ID: ";
+        std::cin >> id;
+        entryTime = std::time(nullptr);
 
-        if (choice == 4) {
+        switch (type) {
+            case 1: v = new Car(id, entryTime); break;
+            case 2: v = new Bus(id, entryTime); break;
+            case 3: v = new Motorbike(id, entryTime); break;
+            default: std::cout << "Invalid type" << std::endl; continue;
+        }
+
+        if (!lot.parkVehicle(v)) {
+            delete v;
             break;
         }
-
-        std::cout << "Enter vehicle ID: ";
-        std::cin >> vehicleID;
-
-        switch (choice) {
-            case 1:
-                vehicle = new Car(vehicleID);
-                break;
-            case 2:
-                vehicle = new Bus(vehicleID);
-                break;
-            case 3:
-                vehicle = new Motorbike(vehicleID);
-                break;
-            default:
-                std::cout << "Invalid choice. Please select a valid vehicle type.\n";
-                continue;
-        }
-
-        lot.parkVehicle(vehicle);
     }
 
-    std::cout << "Enter ID of vehicle to unpark: ";
-    std::cin >> vehicleID;
-    lot.unparkVehicle(vehicleID);
+    // Unparking a vehicle
+    std::cout << "Enter ID to unpark: ";
+    std::cin >> id;
+    if (!lot.unparkVehicle(id)) {
+        std::cout << "Vehicle ID not found or could not be unparked." << std::endl;
+    }
 
     return 0;
 }

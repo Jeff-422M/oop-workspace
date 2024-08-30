@@ -1,8 +1,8 @@
 #ifndef PARKINGLOT_H
 #define PARKINGLOT_H
 
-#include <vector>
 #include "Vehicle.h"
+#include <vector>
 
 class ParkingLot {
 private:
@@ -10,39 +10,33 @@ private:
     int capacity;
 
 public:
-
-    ParkingLot(int cap) : capacity(cap) {}
-
-    ~ParkingLot() {
-        for (Vehicle* v : vehicles) {
-            delete v;
-        }
-        vehicles.clear();
-    }
-
-    void parkVehicle(Vehicle* v) {
-        if (vehicles.size() < capacity) {
-            vehicles.push_back(v);
-            std::cout << "Vehicle parked with ID: " << v->getID() << std::endl;
-        } else {
+    ParkingLot(int maxCapacity) : capacity(maxCapacity) {}
+    bool parkVehicle(Vehicle* v) {
+        if (vehicles.size() >= capacity) {
             std::cout << "The lot is full" << std::endl;
+            return false;
         }
+        vehicles.push_back(v);
+        return true;
     }
-
-    void unparkVehicle(int ID) {
+    bool unparkVehicle(int id) {
         for (auto it = vehicles.begin(); it != vehicles.end(); ++it) {
-            if ((*it)->getID() == ID) {
-                delete *it;
-                vehicles.erase(it); 
-                std::cout << "Vehicle with ID " << ID << " has been unparked." << std::endl;
-                return;
+            if ((*it)->getID() == id) {
+                vehicles.erase(it);
+                return true;
             }
         }
         std::cout << "Vehicle not in the lot" << std::endl;
+        return false;
     }
-
-    int getCount() const {
-        return vehicles.size();
+    int getCount() const { return vehicles.size(); }
+    int countOverstayingVehicles(int maxParkingDuration) const {
+        int count = 0;
+        for (const auto& v : vehicles) {
+            if (v->getParkingDuration() > maxParkingDuration)
+                count++;
+        }
+        return count;
     }
 };
 

@@ -5,8 +5,10 @@
 
 class Car : public Vehicle {
 public:
-    using Vehicle::Vehicle;
-    int getParkingDuration() const override;
+    Car(int id, std::time_t entryTime) : Vehicle(id, entryTime) {}
+    int getParkingDuration() const override {
+        return 0.9 * difftime(std::time(nullptr), timeOfEntry); // Apply a 10% reduction
+    }
 };
 
-#endif // CAR_H
+#endif

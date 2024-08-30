@@ -1,41 +1,35 @@
 #include <iostream>
-#include <vector>
 #include "Car.h"
 #include "Bus.h"
 #include "Motorbike.h"
+#include "ParkingLot.h"
 
 int main() {
-    std::vector<Vehicle*> vehicles;
-    int numCars, numBuses, numMotorbikes;
+    ParkingLot lot(10);
+    Vehicle *v;
+    int type, id;
+    std::time_t entryTime;
 
-    std::cout << "Enter number of Cars: ";
-    std::cin >> numCars;
-    std::cout << "Enter number of Buses: ";
-    std::cin >> numBuses;
-    std::cout << "Enter number of Motorbikes: ";
-    std::cin >> numMotorbikes;
+    while (lot.getCount() < 10) {
+        std::cout << "Enter vehicle type (1=Car, 2=Bus, 3=Motorbike): ";
+        std::cin >> type;
+        std::cout << "Enter ID: ";
+        std::cin >> id;
+        entryTime = std::time(nullptr);
 
-    // Create and store vehicles
-    for (int i = 0; i < numCars; i++) {
-        vehicles.push_back(new Car(i));
-    }
-    for (int i = 0; i < numBuses; i++) {
-        vehicles.push_back(new Bus(numCars + i));
-    }
-    for (int i = 0; i < numMotorbikes; i++) {
-        vehicles.push_back(new Motorbike(numCars + numBuses + i));
-    }
+        switch (type) {
+            case 1: v = new Car(id, entryTime); break;
+            case 2: v = new Bus(id, entryTime); break;
+            case 3: v = new Motorbike(id, entryTime); break;
+            default: std::cout << "Invalid type" << std::endl; continue;
+        }
 
-    // Display parking durations
-    for (Vehicle* v : vehicles) {
-        std::cout << "Vehicle ID " << v->getID() << " Parking Duration: " << v->getParkingDuration() << " seconds\n";
+        if (!lot.parkVehicle(v)) {
+            delete v;
+            break;
+        }
     }
 
-    // Clean up
-    for (Vehicle* v : vehicles) {
-        delete v;
-    }
-    vehicles.clear();
-
+    std::cout << "Finished parking vehicles." << std::endl;
     return 0;
 }
