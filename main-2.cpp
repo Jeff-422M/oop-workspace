@@ -1,23 +1,30 @@
 #include <iostream>
-#include "Robot.hpp"
-#include "Goal.hpp"
-#include "Obstacle.hpp"
+#include "Robot.h"
+#include "Goal.h"
+#include "Obstacle.h"
 
 int main() {
-    Robot player(4, 3);
-    Goal goal(4, 3);
-    Obstacle obstacle(1, 1, 4, 3);
-    player.move(3, 2);
-    if (goal.interact(&player)) {
-        std::cout << "Player reached the goal!" << std::endl;
+    Robot player(5, 5);
+
+    Goal goal(2, 2);
+    Obstacle obstacle(1, 0);
+
+    std::cout << "Initial Health: " << player.getHealth() << std::endl;
+
+    player.move(1, 0);
+    if (obstacle.interact(&player)) {
+        std::cout << "Robot hit the obstacle! Health: " << player.getHealth() << std::endl;
     }
 
-    player.move(-2, -1);
-    if (obstacle.interact(&player)) {
-        std::cout << "Player hit an obstacle and lost!" << std::endl;
+    player.move(1, 2);
+    if (goal.interact(&player)) {
+        std::cout << "Goal reached!" << std::endl;
     } else {
-        std::cout << "Player's remaining health: " << player.getHealth() << std::endl;
+        std::cout << "Goal not reached." << std::endl;
     }
+
+    std::cout << "Active Interactable Count: " << Interactable::getActiveInteractableCount() << std::endl;
 
     return 0;
 }
+

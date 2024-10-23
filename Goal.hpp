@@ -1,22 +1,17 @@
-#ifndef GOAL_HPP
-#define GOAL_HPP
-
-#include "Interactable.hpp"
-#include "Helper.hpp"
+#pragma once
+#include "Interactable.h"
+#include "Robot.h"
+#include <cmath>
 
 class Goal : public Interactable {
 public:
-    Goal(int width, int height) : Interactable(0, 0, width, height) {}
+    Goal(int x, int y) : Interactable(x, y) {}
 
     bool interact(Robot* player) override {
-        auto playerPos = player->getCoordinates();
-        auto goalPos = getCoordinates();
-        return Helper::euclideanDistance(playerPos, goalPos) == 0.0;
+        return (player->getX() == x && player->getY() == y);
     }
 
     InteractableType getType() const override {
         return GOAL;
     }
 };
-
-#endif

@@ -1,38 +1,36 @@
-#ifndef ROBOT_HPP
-#define ROBOT_HPP
-
-#include "GridItem.hpp"
+#pragma once
+#include "GridItem.h"
 
 class Robot : public GridItem {
 private:
     int health;
+    int gridWidth, gridHeight;
 
 public:
-    Robot(int gridWidth, int gridHeight) : GridItem(0, 0, gridWidth, gridHeight), health(3) {}
+    Robot(int gridWidth, int gridHeight)
+        : GridItem(0, 0), health(3), gridWidth(gridWidth), gridHeight(gridHeight) {}
 
-    int getHealth() const {
-        return health;
-    }
+    int getHealth() const { return health; }
 
     void takeHit() {
         if (health > 0) {
-            health--;
+            --health;
         }
     }
 
     bool move(int xOffset, int yOffset) {
-        auto [x, y] = getCoordinates();
-        if (xOffset != 0 && yOffset != 0) {
+        if ((xOffset != 0 && yOffset != 0) || (xOffset == 0 && yOffset == 0)) {
             return false;
         }
+
         int newX = x + xOffset;
         int newY = y + yOffset;
-        if (newX >= 0 && newY >= 0 && newX < getGridWidth() && newY < getGridHeight()) {
-            setCoordinates(newX, newY);
+
+        if (newX >= 0 && newX < gridWidth && newY >= 0 && newY < gridHeight) {
+            x = newX;
+            y = newY;
             return true;
         }
         return false;
     }
 };
-
-#endif

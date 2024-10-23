@@ -1,18 +1,15 @@
-#ifndef OBSTACLE_HPP
-#define OBSTACLE_HPP
-
-#include "Interactable.hpp"
-#include "Helper.hpp"
+#pragma once
+#include "Interactable.h"
+#include "Robot.h"
+#include <cmath>
 
 class Obstacle : public Interactable {
 public:
-    Obstacle(int x, int y, int width, int height) : Interactable(x, y, width, height) {}
+    Obstacle(int x, int y) : Interactable(x, y) {}
 
     bool interact(Robot* player) override {
-        auto playerPos = player->getCoordinates();
-        auto obstaclePos = getCoordinates();
-        double distance = Helper::euclideanDistance(playerPos, obstaclePos);
-        if (distance == 0.0) {
+        double distance = std::sqrt(std::pow(player->getX() - x, 2) + std::pow(player->getY() - y, 2));
+        if (distance == 0) {
             player->takeHit();
             return player->getHealth() == 0;
         }
@@ -23,5 +20,3 @@ public:
         return OBSTACLE;
     }
 };
-
-#endif
