@@ -2,14 +2,21 @@
 #define OBSTACLE_HPP
 
 #include "Interactable.hpp"
+#include "Helper.hpp"
 
 class Obstacle : public Interactable {
 public:
     Obstacle(int x, int y, int width, int height) : Interactable(x, y, width, height) {}
 
     bool interact(Robot* player) override {
-        auto [px, py] = player->getCoordinates();
-        auto [ox, oy] = getCoordinates();
+        std::pair<int, int> playerCoords = player->getCoordinates();
+        int px = playerCoords.first;
+        int py = playerCoords.second;
+
+        std::pair<int, int> obstacleCoords = getCoordinates();
+        int ox = obstacleCoords.first;
+        int oy = obstacleCoords.second;
+
         double distance = Helper::euclideanDistance({px, py}, {ox, oy});
         if (distance == 0) {
             player->takeHit();
@@ -24,4 +31,5 @@ public:
 };
 
 #endif
+
 

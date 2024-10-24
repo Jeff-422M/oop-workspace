@@ -19,7 +19,10 @@ public:
     }
 
     bool move(int xOffset, int yOffset) {
-        auto [x, y] = getCoordinates();
+        std::pair<int, int> coords = getCoordinates();
+        int x = coords.first;
+        int y = coords.second;
+
         if (xOffset != 0 && yOffset != 0) return false;
         if ((x + xOffset >= 0 && x + xOffset < getGridWidth()) && (y + yOffset >= 0 && y + yOffset < getGridHeight())) {
             setCoordinates(x + xOffset, y + yOffset);
