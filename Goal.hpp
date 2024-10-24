@@ -1,17 +1,21 @@
-#pragma once
-#include "Interactable.h"
-#include "Robot.h"
-#include <cmath>
+#ifndef GOAL_HPP
+#define GOAL_HPP
+
+#include "Interactable.hpp"
 
 class Goal : public Interactable {
 public:
-    Goal(int x, int y) : Interactable(x, y) {}
+    Goal(int width, int height) : Interactable(0, 0, width, height) {}
 
     bool interact(Robot* player) override {
-        return (player->getX() == x && player->getY() == y);
+        auto [rx, ry] = player->getCoordinates();
+        auto [gx, gy] = getCoordinates();
+        return (rx == gx && ry == gy);
     }
 
     InteractableType getType() const override {
-        return GOAL;
+        return InteractableType::GOAL;
     }
 };
+
+#endif

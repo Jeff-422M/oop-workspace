@@ -1,32 +1,27 @@
 #ifndef GAME_HPP
 #define GAME_HPP
 
-#include <iostream>
-#include <vector>
-#include <string>
 #include "Robot.hpp"
 #include "Goal.hpp"
 #include "Obstacle.hpp"
 #include "GameState.hpp"
+#include <vector>
+#include <iostream>
+#include <iomanip>
 
 class Game {
 private:
-    int width;
-    int height;
     Robot player;
     Goal goal;
     std::vector<Obstacle> obstacles;
     GameState state;
+    int width, height;
 
 public:
-    Game(int width, int height, std::vector<std::pair<int, int>> obstacleCoordinates)
-        : width(width), height(height), player(width, height), goal(width, height), state(GameState::PLAYING) {
-        goal.setCoordinates(width - 1, height - 1);
-
+    Game(int width, int height, const std::vector<std::pair<int, int>>& obstacleCoordinates)
+    : player(width, height), goal(width-1, height-1), width(width), height(height), state(GameState::PLAYING) {
         for (auto& coord : obstacleCoordinates) {
-            if (coord.first != 0 || coord.second != 0 && coord.first != width - 1 || coord.second != height - 1) {
-                obstacles.emplace_back(Obstacle(coord.first, coord.second, width, height));
-            }
+            obstacles.emplace_back(coord.first, coord.second, width, height);
         }
     }
 
@@ -46,37 +41,40 @@ public:
     }
 
     void movePlayer(int dx, int dy) {
-        if (state == GameState::PLAYING) {
-            if (player.move(dx, dy)) {
-                for (auto& obstacle : obstacles) {
-                    if (obstacle.interact(&player)) {
-                        state = GameState::LOSE;
-                        return;
-                    }
-                }
-                if (goal.interact(&player)) {
-                    state = GameState::WIN;
+        if (state != GameState::PLAYING) return;
+
+        if (player.move(dx, dy)) {
+            for (auto& obstacle : obstacles) {
+                if (obstacle.interact(&player)) {
+                    state = player.getHealth() <= 0 ? GameState::LOSE : GameState::PLAYING;
                 }
             }
+            auto [px, py] = player.getCoordinates();
+            auto [gx, gy] = goal.getCoordinates();
+            if (px == gx && py == gy) state = GameState::WIN;
         }
     }
 
     void printGrid() {
-        std::vector<std::string> grid(height, std::string(width, '_'));
-        auto [px, py] = player.getCoordinates();
-
-        grid[py][px] = 'P';
-
-        auto [gx, gy] = goal.getCoordinates();
-        grid[gy][gx] = 'G';
-
-        for (const auto& obstacle : obstacles) {
-            auto [ox, oy] = obstacle.getCoordinates();
-            grid[oy][ox] = 'O';
-        }
-
-        for (const auto& line : grid) {
-            std::cout << line << std::endl;
+        for (int y = 0; y < height; y++) {
+            for (int x = 0; x < width; x++) {
+                if (x == player.getCoordinates().first && y == player.getCoordinates().second) {
+                    std::cout << 'P';
+                } else if (x == goal.getCoordinates().first && y == goal.getCoordinates().second) {
+                    std::cout << 'G';
+                } else {
+                    bool isObstacle = false;
+                    for (auto& obstacle : obstacles) {
+                        if (x == obstacle.getCoordinates().first && y == obstacle.getCoordinates().second) {
+                            std::cout << 'O';
+                            isObstacle = true;
+                            break;
+                        }
+                    }
+                    if (!isObstacle) std::cout << '_';
+                }
+            }
+            std::cout << std::endl;
         }
     }
 };

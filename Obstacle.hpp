@@ -1,22 +1,27 @@
-#pragma once
-#include "Interactable.h"
-#include "Robot.h"
-#include <cmath>
+#ifndef OBSTACLE_HPP
+#define OBSTACLE_HPP
+
+#include "Interactable.hpp"
 
 class Obstacle : public Interactable {
 public:
-    Obstacle(int x, int y) : Interactable(x, y) {}
+    Obstacle(int x, int y, int width, int height) : Interactable(x, y, width, height) {}
 
     bool interact(Robot* player) override {
-        double distance = std::sqrt(std::pow(player->getX() - x, 2) + std::pow(player->getY() - y, 2));
+        auto [px, py] = player->getCoordinates();
+        auto [ox, oy] = getCoordinates();
+        double distance = Helper::euclideanDistance({px, py}, {ox, oy});
         if (distance == 0) {
             player->takeHit();
-            return player->getHealth() == 0;
+            return player->getHealth() > 0;
         }
         return false;
     }
 
     InteractableType getType() const override {
-        return OBSTACLE;
+        return InteractableType::OBSTACLE;
     }
 };
+
+#endif
+
